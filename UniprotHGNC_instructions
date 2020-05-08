@@ -1,0 +1,20 @@
+Steps for running buildHGNC.py and buildUniprot.py:¶
+	1	Add #!/usr/bin/env python3 line to each of the scripts and to protein.py (class).
+	2	Put all the scripts in the same directory a long with the downloaded databases.
+	3	chmod the scripts (except protein.py because it's a class so no need to run it) and run them.
+  
+  
+**Steps for accessing Marcus's server**:¶
+	1	Clone BioNLP repository to the computer. (git clone)
+	2	Go to marcus> dictionarytagger > mention-index-py4j.
+	3	Run inside the repo: "git submodule update --init --recursive" because dicoria is a submodule and needs to be fetched from its source repo.
+	4	run ./gradlew build.
+	5	run ./gradlew run. (now I am inside the server)
+	6	open another terminal to run buidlDict.py.
+
+**Emil and Petter's code**:
+I contacted Emil and Petter because the code was throwing a mentionindex error. It turned out that there's no need to keep mentionindex lines in the code. 
+Have hgnc.out and uniprot.out together with buildDict.py in the same directory.
+buildDict.py was modified to get columns about HGNC symbol, uniprot ID, taxonomic ID. It had originally the LUGE_ID and the protein name only. SAVED AS buildDict2.py 
+If I want to add something else to the table (e.g. protein names) I should add at the end in "index.write(CommaSeparate(entry.names))".
+Output generated is called 'index.txt'. I renamed to ‘Full_HU_table’.
