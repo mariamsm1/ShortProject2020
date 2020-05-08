@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red33\green89\blue153;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c16078\c43137\c66667;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid101\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs28 \cf0 \cb2 \expnd0\expndtw0\kerning0
+Steps for running buildHGNC.py and buildUniprot.py:\cf3 \'b6\cf0 \cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\b0 \cf0 \cb2 \kerning1\expnd0\expndtw0 {\listtext	1	}\expnd0\expndtw0\kerning0
+Add 
+\b #!/usr/bin/env python3
+\b0  line to each of the scripts and to protein.py (class).\cb1 \
+\ls1\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	2	}\expnd0\expndtw0\kerning0
+Put all the scripts in the same directory a long with the downloaded databases.\cb1 \
+\ls1\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	3	}\expnd0\expndtw0\kerning0
+chmod the scripts (except protein.py because it's a class so no need to run it) and run them.\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\b \cf0 \cb2 Steps for accessing Marcus's server:\cf3 \'b6\cf0 \cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0
+\b0 \cf0 \cb2 \kerning1\expnd0\expndtw0 {\listtext	1	}\expnd0\expndtw0\kerning0
+Clone BioNLP repository to the computer. (git clone)\cb1 \
+\ls2\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	2	}\expnd0\expndtw0\kerning0
+Go to marcus> dictionarytagger > mention-index-py4j.\cb1 \
+\ls2\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	3	}\expnd0\expndtw0\kerning0
+Run inside the repo: "git submodule update --init --recursive" because dicoria is a submodule and needs to be fetched from its source repo.\cb1 \
+\ls2\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	4	}\expnd0\expndtw0\kerning0
+run ./gradlew build.\cb1 \
+\ls2\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	5	}\expnd0\expndtw0\kerning0
+run ./gradlew run. (now I am inside the server)\cb1 \
+\ls2\ilvl0\cb2 \kerning1\expnd0\expndtw0 {\listtext	6	}\expnd0\expndtw0\kerning0
+open another terminal to run buidlDict.py.\
+\pard\tx720\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+
+\b \cf0 Emil and Petter's code
+\b0 :\cb1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \cb2 I contacted Emil and Petter because the code was throwing a mentionindex error. It turned out that there's no need to keep mentionindex lines in the code. \cb1 \
+\cb2 Have hgnc.out and uniprot.out together with buildDict.py in the same directory.\cb1 \
+\cb2 buildDict.py was modified to get columns about HGNC symbol, uniprot ID, taxonomic ID. It had originally the LUGE_ID and the protein name only. 
+\b SAVED AS buildDict2.py
+\b0  \cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\b \cf0 \cb2 If I want to add something else to the table (e.g. protein names)
+\b0  I should add at the end in "index.write(CommaSeparate(entry.names))".\cb1 \
+
+\b \cb2 Output
+\b0  generated is called '
+\b index.txt
+\b0 '. I renamed to \'91
+\b Full_HU_table
+\b0 \'92.\
+\
+}
