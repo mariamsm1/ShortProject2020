@@ -15,6 +15,6 @@ Steps for running buildHGNC.py and buildUniprot.py:¶
 **Emil and Petter's code**:
 -I contacted Emil and Petter because the code was throwing a mentionindex error. It turned out that there's no need to keep mentionindex lines in the code. 
 -Have hgnc.out and uniprot.out together with buildDict.py in the same directory.
--buildDict.py was modified to get columns about HGNC symbol, uniprot ID, protein names+synonyms, and LUGE ID (which includes the taxonomic ID). It had originally the LUGE_ID and the protein name only. SAVED AS buildDict2.py 
+-buildDict.py was modified (and renamed to buildDict2.py) to get columns about HGNC symbol, uniprot ID, protein names+synonyms, and LUGE ID (which includes the taxonomic ID). It had originally the LUGE_ID and the protein name only. SAVED AS buildDict2.py 
 -Output generated is called 'index.txt'. I renamed to ‘Full_HU_table’.
 -A python scripts named "Separate_Synonyms_HU" should be used along with the bash commands to get the synonyms in a separate column.
