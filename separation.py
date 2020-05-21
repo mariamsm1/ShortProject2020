@@ -18,14 +18,13 @@ with open('PreUniprot_Data_table') as pre, open('synonyms_HU', 'w') as out:
             for syn in gslist:
                 if not syn in genelist:
                     syn_list.append(syn)
-                    ','.join(syn_list)
-        print(syn_list, file = out)
+                    synonym = ','.join(syn_list)
+        print(synonym, file = out)
 
-#cat synonyms_HU | tr -d "[]'" > clean_synonym_HU
 #cat PreUniprot_Data_table | cut -f1 > HU_genename
 #cat PreUniprot_Data_table | cut -f2 > HU_protID
 #cat PreUniprot_Data_table | cut -f3 > HU_protname
 #cat PreUniprot_Data_table | cut -f5 > HU_Luge
-#paste -d '\t' HU_protID HU_genename clean_synonym_HU HU_protname HU_Luge > Uniprot_Data_table
+#paste -d '\t' HU_protID HU_genename synonyms_HU HU_protname HU_Luge > Uniprot_Data_table
        
         
