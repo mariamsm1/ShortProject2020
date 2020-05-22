@@ -1,5 +1,5 @@
 Steps for running buildHGNC.py and buildUniprot.py:¶
-	1	Add #!/usr/bin/env python3 line to each of the scripts and to protein.py (class).
+	1	Add #!/usr/bin/env python3 line to each of the scripts and to protein2.py (class).
 	2	Put all the scripts in the same directory a long with the downloaded databases.
 	3	chmod the scripts (except protein.py because it's a class so no need to run it) and run them.
   
