@@ -4,7 +4,6 @@
 #
 #SCRIPT TO DOWNLOAD ALL DATA USED IN THIS SHORT PROJECT.
 #
-#
 #---------------------------------
 #Downloading .tar.gz files from "The Autophagy database". It requires wget and tarfile libraries.
 #save the url of the file to a variable
