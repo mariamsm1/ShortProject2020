@@ -5,6 +5,8 @@ My short project entitled "Functional annotation of potential regulators of lyso
 Scripts of the above tasks require the installation and import of various packages(see packages.py) and Matplotlib library(v3.1.1). <br>
 Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, merge.py,overlap.py.
 Versions and release dates of databases were recorded if they were available, otherwise the date of data collection was written instead.
+<br>
+Input files used to generate output are saved in Input_Files folder.
 
 
 ## Dependencies
@@ -20,14 +22,20 @@ This script involves the packages used in this short project.
 
 ## Main Scripts
 * datadownload.py<br>
-This script involves the codes written for downloading the databases that were available for download or the htmls of databases that were not available for download.<br>
+Involves the codes written for downloading the databases that were available for download or the htmls of databases that were not available for download.<br>
 Some codes should be run a long with the correct packages from packages.py.<br>
 One file was downloaded manually and therefore it is not included in this set of codes. It is from uniprot/subcellular-lysosome section(release 2020_02).
 
 * webscraping.py<br>
-This script involves codes written for parsing databases that were not available for download. HTML scraping was the method used in this case.
+Runs codes written for parsing databases that were not available for download. HTML scraping was the method used in this case.
 
 
+* parse.py<br>
+Involves codes written for parsing the databases that were available for download in order to extract necessary fields.
+
+## Analysis Scripts
+* merge.py
+Runs codes written for merging the databases in order to collect all possible information related to autophagy, cell death and lysosomes.
 
 
-
+* overlap.py
