@@ -967,14 +967,46 @@ with open('tobecleaned56','r') as tobecleaned, open('cleanTable56', 'w') as outp
             tuples = list(zip(*[iter(myelement)]*3))
     for tup in tuples[1:]:
         print(';'.join(tup), file = output)
+
+#cat all files and save to TBU_HumanAutophagy_DB
+
+#Parsing Human Autophagy database
+entrez_uniprot = {} # will hold the entrezID from the mapped entries.
+myDict = {} #this will be the big dictionary that will hold entGeneIDs, name , uniprotID, symbol from the original file.
+with open('TBU_HumanAutophagy_DB', 'r') as tbu, open('mapped_uniprot_HADB','r') as mapped, open('TBU_New_HADB', 'w') as out:
+    print('GeneId_HADB', 'Uniprot_HADB','Name_HADB','Symbol_HADB', sep = ';', file = out)
+    for line in mapped:
+        if not 'yourlist' in line:
+            line=line.rstrip()
+            line=line.split('\t')
+            entrezID= line[0]
+            uniprot = line[1]
+            entrez_uniprot[uniprot] = entrezID
+    for line in tbu:
+        if not 'GeneId' in line:
+            line=line.rstrip()
+            line=line.split(';')
+            entGeneID = line[0]
+            myDict[entGeneID] = {}
+            name = line[1]
+            myDict[entGeneID]['name'] = name
+            symbol=line[2]
+            myDict[entGeneID]['symbol'] = symbol
+    for uniprot,entrezID in entrez_uniprot.items():
+        if entrezID in myDict:
+            print(entrezID, uniprot,myDict[entrezID]['name'], myDict[entrezID]['symbol'], sep = ';', file = out)
 #-------------------------------
 
 #Dealing with Human Lysosome Gene database
 
+with open('TheHumanLysosomeGene.html', 'r') as html_file:
+    soup = BeautifulSoup(html_file, 'lxml')
+    table = soup.find_all('table')
+#len(table)
+
 list_head = []
 list_rows= []
 
-#Create a csv
 with open ('HumanLysosomeGene_table', 'w') as out:
     for row in table[1].find_all('tr'):
         for head in row.find_all('th'):
@@ -991,5 +1023,28 @@ with open ('HumanLysosomeGene_table', 'w') as out:
     
     for tup in tuples: #keep in mind that the delimiter is a ';'
         print(';'.join(tup), file = out)
+        
+#Parsing Human Lysosome Gene database
+
+count = 0
+symbol_list =[]
+with open('HumanLysosomeGene_table', 'r') as table, open ('symbol', 'w') as symb, open('name','w' ) as nam:
+    for line in table:
+        line=line.rstrip()
+        line=line.split(';')
+        symbol = line[0]
+        name = line[1]
+        print(name, file = nam)
+        symbol_list.append(symbol)
+        #some references are printed with the name creating an empty line in the list of symbols. 
+        #replace the empty line with nan (this will be eliminated at later steps)
+        symbol_list = ['nan' if x == '' else x for x in symbol_list]
+    for element in symbol_list:
+            print(element, file = symb)
+with open('prefinal_HLG', 'r') as pre, open ('TBU_HumanLysosomeGene_DB', 'w') as tbu:
+    for line in pre:
+        line= line.rstrip()
+        if not line.startswith('nan'):
+            print(line,file = tbu)
 #-----------------------------
   
