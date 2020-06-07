@@ -15,10 +15,10 @@ junk_list= ['metastatic prostate cancer; primary prostate cancer', '1GAG;1I44;1I
 '2YS1', '1B8M;1BND', 'Ins1; LY294002; PI3K (complex); wortmannin; IGF1; PDPK1; Insulin; PTEN; INS; EGF; AKT1; Pdgf (complex); TNF; hydrogen peroxide; ILK', 'D-glucose; dexamethasone; REN; beta-estradiol; IL6; losartan potassium; AGT; candesartan; SB203580; Ins1; ACE; lipopolysaccharide; STAT3; Insulin; phorbol myristate acetate',
 'advanced glycation end-products; HMGB1; TNF; advanced glycation endproducts-bovine serum albumin; APP; exenatide; GLP-1-(7-34)-amide; GCG; D-glucose; CRP; NFkB (complex); IL1B; PSEN1; AGER; S100B', '221040736;1034671294;46394126;56788407;158261143;553634;221045686;56788401;56788405;13129138;767958268;383875656;48762798;119608037;56788403;119608038;1034671292;46391586;56788399;48762794;46391582;52545786;15214282;48762796;383875657',
 'hypertension']
-#alter_list will be used to append all the alternative names (including alternative name #736 which will be removed from te list)
+#alter_list will be used to append all the alternative names (including alternative name #736 which will be removed from the list)
 alter_list = []
 
-#each file ('w') is used to include one field (ex Symbol, uniprot_ID, organism) these fields will be all pasted in bash.
+#each file ('w') is used to include one field (e.g. Symbol, uniprot_ID, organism) these fields will be all pasted in bash.
 with open('protein-basic.csv', 'r', encoding = 'latin1') as protein, open('TBU_Symbol', 'w') as output, open('TBU_uniprot', 'w') as out, open('TBU_homo', 'w') as out2:
     for line in protein:
         #The following line will be used to extract homo_sapiens from the splitted list
@@ -57,6 +57,21 @@ with open('alternative_output','r') as tbu, open('TBU_alternative', 'w') as out:
     for element in alter_list:
         print(element, file = out)
 #paste -d '|' TBU_Symbol TBU_uniprot TBU_alternative TBU_homo > TBU_protein-basic
+
+#remove 'nan' uniprot IDs
+with open('TBU_protein_basic', 'r') as TBU, open('TBU_proteinbasicHAMdb_clean', 'w') as clean, open('proteinbasicHAMdb_nan', 'w') as nan:
+    print('UniprotID_HAMdb','Symbol_HAMdb','AlternativeNAmes_HAMdb','Organism_HAMdb', sep = ';', file = nan)
+    for line in TBU:
+        line=line.rstrip()
+        line=line.split(';')
+        unipID = line[1]
+        symbol = line[0]
+        altname = line[2]
+        org = line[3]
+        if not 'nan' in unipID:
+            print(unipID,symbol,altname,org, sep = ';', file = clean)
+        else:
+            print(unipID,symbol,altname,org, sep = ';', file = nan)
 #----------------------------------
 
 #Parsing Hela Spatial Proteome(HSP)
@@ -229,7 +244,94 @@ with open('transitionfile', 'r') as org, open('TBU_compact_HSP','w') as out, ope
         print(element, file = output2)
             
 #paste -d '|' first_cols compfile conffile >datafile
-#cat TBU_compact_HSP datafile > TBU_compact-HSP        
+#cat TBU_compact_HSP datafile > TBU_compact-HSP    
+
+#Get the genes related to lysosomes
+count=0
+#Open all files together (I am sure that all of these files have the same structure)
+for names in ('DYNdeep', 'LFQdeep','LFQ_Fast', 'SimulatedDyn_LFQFast', 'SimulatedDyn_LFQdeep', 'TMTdeep', 'TMTfast'):
+    with open('TBU_'+names, 'r') as tbu, open('Full_lyso_HSP', 'a') as out:
+        for line in tbu:
+            if 'lysosome' in line or 'lysosomes' in line or 'lysosomal' in line or 'Lysosome' in line or 'Lysosomes' in line or 'Lysosomal' in line:
+                line = line.rstrip()
+                line=line.split('|')
+                protname = line[1].replace(',', ':').replace(';', ',')
+                gname = line[2]
+                protId = line[0].replace(';', ',')
+                print(protId, protname,gname,sep =";", file = out) #146
+
+#Fix to get needed fields
+count = 0
+set1 = set() # this will store 
+full_dict = {}
+set2 = set()
+with open('Full_lyso_HSP' ,'r') as full:
+    for line in full:
+        line=line.rstrip()
+        line=line.split(';')    
+        protId = line[0]
+        full_dict[protId] = {}
+        protname = line[1]
+        full_dict[protId]['protname'] = protname
+        gname = line[2]
+        full_dict[protId]['gname'] = gname
+        #split the protId and put in a set to get unique ones only
+        protsplit = protId.split(',')
+        for element in protsplit:
+            set1.add(element)
+    for key in full_dict:
+        #split the key to compare it to protId in the set and to print the rest of info of that key.
+        keysplit = key.split(',')
+        for element in set1:
+            #if the protId in set1 matches the splittedkey, print the protname and gname of that Id. This will give duplicated Ids.
+            if element in keysplit:
+                print(element,full_dict[key]['protname'], full_dict[key]['gname'], sep = ';',file = open('splittedHSP_keys', 'a'))
+        
+        
+com= open('TBU_compact-HSP', 'r') 
+out = open('TBU_compact_HSP', 'w') # this is the first 3 columns of the compact data.
+for line in com:
+    if not 'Gene name' in line:
+        line = line.rstrip()
+        line=line.split('|')
+        protID = line[1]
+        protname = line[2]
+        gname = line[0]
+        print(protID,protname,gname, sep = ';', file = out)
+        
+
+with open('TBU_organellar_markers', 'r') as orgn, open('TBU_organellarmarkers', 'w') as out2:
+    for line in orgn:
+        if not 'Gene name' in line:
+            line = line.rstrip()
+            line=line.split('|')
+            protID = line[1]
+            protname = line[2]
+            gname = line[0]
+            print(protID,protname,gname, sep = ';', file = out2)
+        
+        
+splt = set(open(r'splittedHSP_keys'))
+new_com = set(open('TBU_compact_HSP', 'r'))
+org = set(open(r'TBU_organellarmarkers'))
+with open('TBU_ALL_HSP','w') as output:
+    print('ProteinID_HSP','ProteinName_HSP', 'GeneName_HSP', sep = ';', file = output)
+    for line in new_com:
+        line=line.rstrip()
+        if line in splt:
+            set2.add(line)
+        else:
+            set2.add(line)
+    for line in splt:
+        line=line.rstrip()
+        if not line in new_com:
+            set2.add(line)
+    for line in org:
+        line=line.rstrip()
+        if not line in new_com:
+            set2.add(line)
+    for element in set2:
+        print(element,file = output)    
 #---------------------------------
 
 #Parsing Yeast Cell Death database (yCellDeath)
@@ -372,30 +474,6 @@ with open('proteinAtlasLysosomeS.tsv') as lyso, open('proteinAtlasLysosomAl.tsv'
 
             
   #cat proteinAtlasLysosome1 prefinalProteinAtlas > TBU_proteinAtlasLysosome         
-#------------------------------------
-
-#Parsing Human Lysosome Gene database
-
-count = 0
-symbol_list =[]
-with open('HumanLysosomeGene_table', 'r') as table, open ('symbol', 'w') as symb, open('name','w' ) as nam:
-    for line in table:
-        line=line.rstrip()
-        line=line.split(';')
-        symbol = line[0]
-        name = line[1]
-        print(name, file = nam)
-        symbol_list.append(symbol)
-        #some references are printed with the name creating an empty line in the list of symbols. 
-        #replace the empty line with nan (this will be eliminated at later steps)
-        symbol_list = ['nan' if x == '' else x for x in symbol_list]
-    for element in symbol_list:
-            print(element, file = symb)
-with open('prefinal_HLG', 'r') as pre, open ('TBU_HumanLysosomeGene_DB', 'w') as tbu:
-    for line in pre:
-        line= line.rstrip()
-        if not line.startswith('nan'):
-            print(line,file = tbu)
 #-----------------------------------
 
 #Parsing goa_uniprot_all.gaf
@@ -484,4 +562,242 @@ with open('cellD_lines','r') as cell, open('TBU-cellDeath','w') as out:
 #cat headers TBU-cellDeath | grep -v '^URS'> TBU_cellDeath
 #---------------------------------
 
+#Parsing Amigo-Lysosome Data
 
+#Parse Amigo downloaded data 
+#Start with Amigo_lysosome data
+synonym_uni = []
+synonym_oth = []
+with open('AmiGo_lysosome_geneproduct', 'r') as amigo, open('unip_gene', 'w') as out, open('organism_uni', 'w') as org, open('synonym_uni', 'w') as syn, open('otherdb_gene', 'w') as out2, open('organism_otherdb', 'w') as org_oth, open('synonym_othdb', 'w') as syn_oth:
+    for line in amigo:
+        line = line.rstrip()
+        if line.startswith('UniProtKB'):
+            line = line.split('\t')
+            pre_Uniprot_ID = line[0]
+            Uniprot_ID = pre_Uniprot_ID.split(':')[1]
+            gene_name = line[1]
+            print(Uniprot_ID, gene_name, sep = ';', file = out)
+            organism = line[3]
+            print(organism, file = org)
+            synonym = line[2]
+            synonym_uni.append(synonym)
+            synonym_uni = ['nan' if x == '' else x for x in synonym_uni]
+        else:
+            line = line.split('\t')
+            ID = line[0]
+            genename = line[1]
+            print(ID, genename, sep = ';', file = out2)
+            Organism = line[3]
+            print(Organism, file = org_oth)
+            Synonym= line[2]
+            synonym_oth.append(Synonym)
+            synonym_oth = ['nan' if x == '' else x for x in synonym_oth]
+    for element in synonym_oth:
+        print(element, file = syn_oth)
+    for element in synonym_uni:
+        print(element, file = syn)
+
+#echo 'Uniprot_ID' 'gene/product_name' 'Synonyms' 'Organism' | tr ' ' ';' > headers
+#paste -d ';' unip_gene synonym_uni organism_uni > pre_TBU_Uniprot_Amigo_lysosome
+#cat headers pre_TBU_Uniprot_Amigo_lysosome > TBU_Uniprot_Amigo_lysosome
+
+
+#paste -d ';' otherdb_gene synonym_othdb organism_otherdb > pre_TBU_otherDB_Amigo_lysosome
+#cat headers pre_TBU_otherDB_Amigo_lysosome > TBU_otherDB_Amigo_lysosome
+
+
+#Amigo_autophagy data
+synonym_uni = []
+synonym_oth = []
+with open('AmiGo_autophagy_geneproduct', 'r') as amigo, open('unip_gene', 'w') as out, open('organism_uni', 'w') as org, open('synonym_uni', 'w') as syn, open('otherdb_gene', 'w') as out2, open('organism_otherdb', 'w') as org_oth, open('synonym_othdb', 'w') as syn_oth:
+    for line in amigo:
+        line = line.rstrip()
+        if line.startswith('UniProtKB'):
+            line = line.split('\t')
+            pre_Uniprot_ID = line[0]
+            Uniprot_ID = pre_Uniprot_ID.split(':')[1]
+            gene_name = line[1]
+            print(Uniprot_ID, gene_name, sep = ';', file = out)
+            organism = line[3]
+            print(organism, file = org)
+            synonym = line[2]
+            synonym_uni.append(synonym)
+            synonym_uni = ['nan' if x == '' else x for x in synonym_uni]
+        else:
+            line = line.split('\t')
+            ID = line[0]
+            genename = line[1]
+            print(ID, genename, sep = ';', file = out2)
+            Organism = line[3]
+            print(Organism, file = org_oth)
+            Synonym= line[2]
+            synonym_oth.append(Synonym)
+            synonym_oth = ['nan' if x == '' else x for x in synonym_oth]
+    for element in synonym_oth:
+        print(element, file = syn_oth)
+    for element in synonym_uni:
+        print(element, file = syn)
+        
+#paste -d ';' unip_gene synonym_uni organism_uni > pre_TBU_Uniprot_Amigo_autophagy
+#cat headers pre_TBU_Uniprot_Amigo_autophagy > TBU_Uniprot_Amigo_autophagy
+
+
+#paste -d ';' otherdb_gene synonym_othdb organism_otherdb > pre_TBU_otherDB_Amigo_autophagy
+#cat headers pre_TBU_otherDB_Amigo_autophagy > TBU_otherDB_Amigo_autophagy
+
+
+#Amigo Cell Death data
+
+synonym_uni = []
+synonym_oth = []
+with open('AmiGo_cellDeath_geneproduct', 'r') as amigo, open('unip_gene', 'w') as out, open('organism_uni', 'w') as org, open('synonym_uni', 'w') as syn, open('otherdb_gene', 'w') as out2, open('organism_otherdb', 'w') as org_oth, open('synonym_othdb', 'w') as syn_oth:
+    for line in amigo:
+        line = line.rstrip()
+        if line.startswith('UniProtKB'):
+            line = line.split('\t')
+            pre_Uniprot_ID = line[0]
+            Uniprot_ID = pre_Uniprot_ID.split(':')[1]
+            gene_name = line[1]
+            print(Uniprot_ID, gene_name, sep = ';', file = out)
+            organism = line[3]
+            print(organism, file = org)
+            synonym = line[2]
+            synonym_uni.append(synonym)
+            synonym_uni = ['nan' if x == '' else x for x in synonym_uni]
+        else:
+            line = line.split('\t')
+            ID = line[0]
+            genename = line[1]
+            print(ID, genename, sep = ';', file = out2)
+            Organism = line[3]
+            print(Organism, file = org_oth)
+            Synonym= line[2]
+            synonym_oth.append(Synonym)
+            synonym_oth = ['nan' if x == '' else x for x in synonym_oth]
+    for element in synonym_oth:
+        print(element, file = syn_oth)
+    for element in synonym_uni:
+        print(element, file = syn)
+        
+        
+#paste -d ';' unip_gene synonym_uni organism_uni > pre_TBU_Uniprot_Amigo_cellDeath
+#cat headers pre_TBU_Uniprot_Amigo_cellDeath > TBU_Uniprot_Amigo_cellDeath
+
+
+#paste -d ';' otherdb_gene synonym_othdb organism_otherdb > pre_TBU_otherDB_Amigo_cellDeath
+#cat headers pre_TBU_otherDB_Amigo_cellDeath > TBU_otherDB_Amigo_cellDeath
+#------------------------------
+
+#Parsing The Autophagy Database
+
+# cat atg_genes_detail.dat | cut -f3 > symbol_TADB
+# cat atg_genes_detail.dat | cut -f8 | tr ';' '.' > synonym_TADB
+# cat atg_genes_detail.dat | cut -f11 | tr ';' '.' > Fullname_TADB
+# cat atg_genes_detail.dat | cut -f19 > UniprotId_TADB
+# paste -d ';' symbol_TADB synonym_TADB Fullname_TADB UniprotId_TADB > TheAutophagyDB
+
+synonym_list= []
+name_list = []
+ID_list = []
+with open('TheAutophagyDB', 'r') as tbu, open('symbol_TADB', 'w') as sym, open('synonym_TADB', 'w') as syn, open('name_TADB', 'w') as name, open('ID_TADB', 'w') as ID:
+    for line in tbu:
+        line=line.rstrip()
+        line=line.split(';')
+        symbol = line[0]
+        print(symbol, file = sym)
+        synonym = line[1]
+        synonym_list.append(synonym)
+        synonym_list = ['nan' if x == '' else x for x in synonym_list]
+        fullname = line[2]
+        name_list.append(fullname)
+        name_list = ['nan' if x == '' else x for x in name_list]
+        protID = line[3]
+        ID_list.append(protID)
+        ID_list = ['nan' if x == '' else x for x in ID_list]
+    for element in synonym_list:
+        print(element, file = syn)
+    for element in name_list:
+        print(element, file = name)
+    for element in ID_list:
+        print(element,file = ID)
+
+#paste -d ';' symbol_TADB synonym_TADB name_TADB ID_TADB > TheAutophagyDatabase
+
+# remove 'nan' uniprot IDs
+count = 0
+with open('TBU_TheAutophagy_DB','r') as tbu,open('TBU_TheAutophagyDB_clean', 'w') as clean, open('TheAutophagyDB_nan', 'w') as nan:
+    for line in tbu:
+        line=line.rstrip()
+        line=line.split(';')
+        unipID = line[0]
+        symbol = line[1]
+        synonym = line[2]
+        fullname = line[3]
+        if not 'nan' in unipID:
+            print(unipID,symbol,synonym,fullname, sep = ';', file = clean)
+        else:
+            print(unipID,symbol,synonym,fullname, sep = ';', file = nan)
+#---------------------------------
+
+#Parsing Deathbase
+
+# cat protein_list.txt | cut -f1 > ext_ID
+# cat protein_list.txt | cut -f2 > synonym
+# cat protein_list.txt | cut -f3 > species
+# cat protein_list.txt | cut -f4 > uniprot_ID
+# cat protein_list.txt | cut -f5 | tr ';' ':'> processID # replace ';' because I want to use it as a delimiter.
+# cat protein_list.txt | cut -f6 | tr ';' ':'> pathway_family
+#paste -d ';' ext_ID synonym species uniprot_ID processID pathway_family > edited_protein_list.txt
+
+syn_NI_list = []
+process_NI_list = []
+path_NI_list = []
+
+
+with open('edited_protein_list.txt', 'r') as prot, open('headers', 'w') as out, open('first3_columns_protein', 'w') as out2, open('immun_apop', 'w') as out3, open('synonyms_NI', 'w') as out4, open('processes_NI', 'w') as out5, open('paths_NI', 'w') as out6:
+    for line in prot:
+        if 'external_id' in line:
+            line=line.rstrip()
+            line=line.split(';')
+            print(line[0]+'_Deathbase', line[3]+'_Deathbase',line[2]+'_Deathbase', line[1]+'_Deathbase', line[4]+'_Deathbase', line[5]+'_Deathbase',sep = ';', file = out)
+        else:
+            if not 'IMMUNITY'in line: #NI
+                line=line.rstrip()
+                line=line.split(';')
+                extID_NI = line[0]
+                synonym_NI = line[1]
+                syn_NI_list.append(synonym_NI)
+                syn_NI_list = ['nan' if x == '' else x for x in syn_NI_list]
+                species_NI = line[2]
+                uniprot_NI = line[3]
+                print(extID_NI, uniprot_NI,species_NI, sep = ';', file = out2)
+                process_NI = line[4]
+                process_NI_list.append(process_NI)
+                process_NI_list = ['nan' if x == '' else x for x in process_NI_list]
+                path_NI = line[5]
+                path_NI_list.append(path_NI)
+                path_NI_list = ['nan' if x == '' else x for x in path_NI_list]
+            else:
+                #get the lines that have immunity and apoptosis (this will remove lines with immunity alone)
+                if 'APOPTOSIS' in line:
+                    line=line.rstrip()
+                    line=line.split(';')
+                    extID = line[0]
+                    synonym = line[1]
+                    species = line[2]
+                    uniprot = line[3]
+                    process = line[4]
+                    path = line[5]
+                    print(extID, uniprot,species,synonym,process,path, sep = ';', file = out3)
+    for element in syn_NI_list:
+        print(element, file = out4)
+    for element in process_NI_list:
+        print(element, file = out5)
+    for element in path_NI_list:
+        print(element, file = out6)
+                    
+    
+#paste -d ';' first3_columns_protein synonyms_NI processes_NI paths_NI > file1_protein.txt
+#cat file1_protein.txt immun_apop > file2_protein.txt
+#cat headers file2_protein.txt > TBU_Deathbase_proteinFull_list    
+#--------------------------
