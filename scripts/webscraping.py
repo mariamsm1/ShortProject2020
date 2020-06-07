@@ -441,7 +441,7 @@ with open ('CASBAH_table16'+ ".csv", 'w') as out:
         print(','.join(tup), file = out)    
 #-----------------------------
 
-#Dealing with Human Autophagy Database (HAMdb)
+#Dealing with Human Autophagy Database (HADB)
 
 #FOR tuples LINE : 'str' object is not callable
 
