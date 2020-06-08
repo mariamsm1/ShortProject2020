@@ -34,7 +34,9 @@ Runs codes written for parsing databases that were not available for download. H
 Involves codes written for parsing the databases that were available for download in order to extract necessary fields.
 
 ## Analysis Scripts
-* mergeAutophagy.py, mergeCellDeath.py, mergeLysosome.py<br>
+* mergeAutophagy.py<br>
+* mergeCellDeath.py<br>
+* mergeLysosome.py<br>
 Run codes written for merging the databases from each category in order to collect all available information related to autophagy, cell death and lysosomes.
 
 
