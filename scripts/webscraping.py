@@ -1080,6 +1080,5 @@ with open('prefinal_HLG', 'r') as pre, open ('TBU_HumanLysosomeGene_DB', 'w') as
         line= line.rstrip()
         if not line.startswith('nan'):
             print(line,file = tbu)
-cat header TBU_HumanLysosomeGene_DB> TBU_TheHumanLysosomeGene            
+#cat header TBU_HumanLysosomeGene_DB> TBU_TheHumanLysosomeGene            
 #-----------------------------
-  
