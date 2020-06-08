@@ -1,0 +1,7 @@
+#MARIAM MIARI
+#
+#2020-2021
+#
+#SCRIPT TO MERGE DATABASES AND COLLECT ALL POSSIBLE GENES RELATED TO Cell Death.
+#
+#---------------------------------
