@@ -490,36 +490,116 @@ with open('overODB', 'r') as over, open('Overlap6_ODB', 'w') as out2:
         all_org = ','.join(str(x) for x in orglist)
         print(uniprot,all_symbols,all_alt,all_names,all_org, sep = '\t', file = out2)    
 #---------------------------
-#clean end file
+#Overlap6_ODB and mapped gene ontology (Amigo entries from other databases with uniprot IDs)
 
-#remove nan from synonyms 
-
-#Remove 'nan' in names and organisms
-
-syn_list = []
-with open('Overlap6_ODB') as over, open('Final_Lysosome_Data', 'w') as out:
-    print('uniprot_lys', 'Symbol_lys', 'Synonym_lys', 'ProtName_lys', 'Organism_lys', sep = '\t', file = out)
-    for line in over:
-        line=line.rstrip()
-        line=line.split('\t')
-        uniprot = line[0]
-        gname = line[1]
-        name= line[3]
-        org = line[4]
-        synonym = line[2]
-        if ',' in synonym:
-            syn_list = []
-            synonym = synonym.split(',')
-            synonym = ['' if x == 'nan' else x for x in synonym]
-            synonym = list(filter(None, synonym))
+dict_over = {}
+rev_dict = {}
+with open('Overlap6_ODB') as clean, open('reviewed_uniSyn_amigoLys') as rev, open('oversyn', 'w') as out:
+    for line in clean:
+        if not 'Uniprot_lys' in line:
+            line= line.rstrip()
+            line = line.split('\t')
+            uniprot = line[0]
+            dict_over[uniprot] = {}
+            symbol = line[1]
+            dict_over[uniprot]['symbol'] = symbol
+            synonym = line[2]
+            dict_over[uniprot]['synonym'] = synonym
+            protname = line[3]
+            dict_over[uniprot]['protname'] = protname
+            org = line[4]
+            dict_over[uniprot]['org'] = org
+    for line in rev:
+        if not 'your' in line:
+            line = line.rstrip()
+            line = line.split('\t')
+            uniprot = line[1]
+            rev_dict[uniprot] = {}
+            gsyn = line[5]
+            symbol = gsyn.split(' ')[0]
+            if symbol == '':
+                symbol = 'nan'
+            else:
+                symbol = symbol
+            rev_dict[uniprot]['symbol'] = symbol
+            synonym = gsyn.split(' ')[1:]
             synonym = ','.join(synonym)
-            print(uniprot, gname, synonym, name, org, sep = '\t', file = out)
+            if synonym == '':
+                synonym = 'nan'
+            else:
+                synonym = synonym
+            rev_dict[uniprot]['synonym'] = synonym
+            protname = line[4]
+            protname = protname.split('(EC ')[0]
+            protname = protname.split('[Cleaved ')[0]
+            rev_dict[uniprot]['protname'] = protname
+            org = line[6]
+            rev_dict[uniprot]['org'] = org
+    for key in dict_over:
+        if key in rev_dict:
+            print(key,dict_over[key]['symbol']+','+rev_dict[key]['symbol'], dict_over[key]['synonym']+','+rev_dict[key]['synonym'], dict_over[key]['protname']+'|'+rev_dict[key]['protname'], dict_over[key]['org']+','+rev_dict[key]['org'], sep = '\t', file = out)
         else:
-            print(uniprot, gname, synonym, name, org, sep = '\t', file = out)
-#------------------------------    
-    
-     
-           
-    
+            print(key,dict_over[key]['symbol'],dict_over[key]['synonym'],dict_over[key]['protname'],dict_over[key]['org'], sep = '\t', file = out)
+    for key in rev_dict:
+        if not key in dict_over:
+            print(key,rev_dict[key]['symbol'],rev_dict[key]['synonym'],rev_dict[key]['protname'],rev_dict[key]['org'], sep = '\t', file = out)
+
+            
+import re
+with open('oversyn', 'r') as over, open('Clean_Lysosome_Data', 'w') as out2:
+    for line in over:
+        line=line.rstrip().split('\t')
+        uniprot = line[0]
+        symbol=line[1]
+        symbol = symbol.splitlines()
+        alt = line[2]
+        alt = alt.splitlines()
+        org = line[4]
+        org = org.splitlines()
+        name = line[3]
+        name = name.splitlines()
+        for line in symbol:
+            line=line.rstrip()
+            symbollist = set(line.split(','))
+        for line in alt:
+            line=line.rstrip()
+            altlist = set(re.split('[,/]', line))
+        for line in name:
+            line=line.rstrip()
+            namelist = set(line.split('|')) 
+        for line in org:
+            line = line.rstrip()
+            orglist = set(line.split(','))
+        all_symbols = ','.join(str(x) for x in symbollist)
+        all_alt = ','.join(str(x) for x in altlist)
+        all_names = '|'.join(str(x) for x in namelist)
+        all_org = ','.join(str(x) for x in orglist)
+        print(uniprot,all_symbols,all_alt,all_names,all_org, sep = '\t', file = out2)
+
         
-     
+#map lysosome data to uniprot and take the reviewed entries
+
+with open('Reviewed_Final_LysosomeMappedData') as clean, open('Final_Clean_Lysosome_Data', 'w') as out:
+     for line in clean:
+        if not 'your' in line:
+            line = line.rstrip()
+            line=line.split('\t')
+            uniprot = line[0]
+            gsyn = line[5]
+            symbol = gsyn.split(' ')[0]
+            if symbol == '':
+                symbol = 'nan'
+            else:
+                symbol = symbol
+            synonym = gsyn.split(' ')[1:]
+            synonym = ','.join(synonym)
+            if synonym == '':
+                synonym = 'nan'
+            else:
+                synonym = synonym
+            protname = line[4]
+            protname = protname.split('(EC ')[0]
+            protname = protname.split('[Cleaved ')[0]
+            org = line[6]
+            print(uniprot,symbol,synonym,protname,org, sep = '\t', file = out) 
+#------------------------------    
