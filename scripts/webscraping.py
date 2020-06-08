@@ -438,7 +438,43 @@ with open ('CASBAH_table16'+ ".csv", 'w') as out:
     #print(tuples)
     for tup in tuples:
         tup = tup[:-1]
-        print(','.join(tup), file = out)    
+        print(','.join(tup), file = out)    #cat all 
+        
+#Parsing CASBAH:
+
+#Print each organism's name at the end of its line. 
+with open('CASBAH_Fulltable.csv', 'r') as full, open('TBU_CASBAH', 'w') as out:
+    print('Name_CASBAH', 'Uniprot_CASBAH', 'Synonyms_CASBAH', 'Organism_CASBAH', sep = ';', file = out)
+    for line in full:
+        if not 'Uni Prot' in line:
+            if 'HUMAN' in line or 'human' in line:
+                line = line.rstrip()
+                line = line.split(',')
+                name = line[0]
+                uniprot = line[1].split(')')[0]
+                synonym = line[2].replace(';', ',')
+                print(name,uniprot,synonym, 'HUMAN', sep = ';', file = out )
+            elif 'MOUSE' in line:
+                line = line.rstrip()
+                line=line.split(',')
+                name_m = line[0]
+                uniprot_m = line[1].split(')')[0]
+                synonym_m = line[2].replace(';', ',')
+                print(name_m,uniprot_m,synonym_m,'MOUSE', sep = ';',file = out)
+            elif 'RAT' in line:
+                line = line.rstrip()
+                line=line.split(',')
+                name_r = line[0]
+                uniprot_r = line[1].split(')')[0]
+                synonym_r = line[2].replace(';', ',')
+                print(name_r,uniprot_r,synonym_r,'RAT', sep = ';', file = out)
+            else:
+                line = line.rstrip()
+                line=line.split(',')
+                name_o = line[0]
+                uniprot_o = line[1].split(')')[0]
+                synonym_o = line[2].replace(';', ',')
+                print(name_o,uniprot_o,synonym_o,'OTHER', sep = ';',file = out)
 #-----------------------------
 
 #Dealing with Human Autophagy Database (HADB)
@@ -1046,5 +1082,6 @@ with open('prefinal_HLG', 'r') as pre, open ('TBU_HumanLysosomeGene_DB', 'w') as
         line= line.rstrip()
         if not line.startswith('nan'):
             print(line,file = tbu)
+cat header TBU_HumanLysosomeGene_DB> TBU_TheHumanLysosomeGene            
 #-----------------------------
   
