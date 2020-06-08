@@ -479,8 +479,6 @@ with open('CASBAH_Fulltable.csv', 'r') as full, open('TBU_CASBAH', 'w') as out:
 
 #Dealing with Human Autophagy Database (HADB)
 
-#FOR tuples LINE : 'str' object is not callable
-
 mylist = [] # that is going to be a list of lists
 myelement = []
 
