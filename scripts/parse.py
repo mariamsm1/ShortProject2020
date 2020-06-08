@@ -57,6 +57,7 @@ with open('alternative_output','r') as tbu, open('TBU_alternative', 'w') as out:
     for element in alter_list:
         print(element, file = out)
 #paste -d '|' TBU_Symbol TBU_uniprot TBU_alternative TBU_homo > TBU_protein-basic
+#cat headers TBU_protein-basic > TBU_protein_basic
 
 #remove 'nan' uniprot IDs
 with open('TBU_protein_basic', 'r') as TBU, open('TBU_proteinbasicHAMdb_clean', 'w') as clean, open('proteinbasicHAMdb_nan', 'w') as nan:
@@ -560,6 +561,21 @@ with open('cellD_lines','r') as cell, open('TBU-cellDeath','w') as out:
             set3.add(frozenset({uniprot_ID, symbol,gene_OR_geneproduct_name,synonym}))
             
 #cat headers TBU-cellDeath | grep -v '^URS'> TBU_cellDeath
+
+#Fixing structure
+count = 0
+for names in ('autophagy', 'cellDeath', 'lysosome'):
+    with open('TBU_'+names, 'r') as tbu, open('TBU_New_'+names, 'w') as out:
+        print('UniprotID_goa', 'Symbol_goa', 'DBObject_goa','Synonym_goa', sep = ';', file = out)
+        for line in tbu:
+            if not 'Uniprot_ID'in line:
+                line = line.rstrip()
+                line=line.split(';')
+                uniprot = line[0]
+                symbol = line[1]
+                DB_obj = line[2]
+                synonym = line[3]
+                print(uniprot, symbol, DB_obj, synonym, sep = ';', file = out)      
 #---------------------------------
 
 #Parsing Amigo-Lysosome Data
@@ -683,9 +699,46 @@ with open('AmiGo_cellDeath_geneproduct', 'r') as amigo, open('unip_gene', 'w') a
 #paste -d ';' unip_gene synonym_uni organism_uni > pre_TBU_Uniprot_Amigo_cellDeath
 #cat headers pre_TBU_Uniprot_Amigo_cellDeath > TBU_Uniprot_Amigo_cellDeath
 
-
+for names in ('autophagy', 'cellDeath', 'lysosome'):
+    with open('TBU_Uniprot_Amigo_'+names, 'r') as tbu, open('TBU_New_UniprotAmigo_'+names, 'w') as out:
+        print('UniprotID_Amigo', 'Gene/ProductName_Amigo', 'Synonym_Amigo', 'Organism_Amigo', sep = ';', file = out)
+        for line in tbu:
+            if not 'Uniprot_ID' in line:
+                line=line.rstrip()
+                line=line.split(';')
+                uniprot = line[0]
+                geneprod = line[1]
+                synonym = line[2]
+                organism = line[3]
+                print(uniprot,geneprod,synonym,organism,sep = ';', file = out)
+                
 #paste -d ';' otherdb_gene synonym_othdb organism_otherdb > pre_TBU_otherDB_Amigo_cellDeath
 #cat headers pre_TBU_otherDB_Amigo_cellDeath > TBU_otherDB_Amigo_cellDeath
+
+#ODB is other databases.
+for names in ('autophagy', 'cellDeath', 'lysosome'):
+    with open('TBU_otherDB_Amigo_'+names, 'r') as tbu, open('TBU_UniprotSyn_ODB_'+names, 'w') as out, open('TBU_NewAmigo_ODB_'+names, 'w') as out2:
+        print('OtherDB_ID_Amigo', 'Gene/ProductName_Amigo', 'UniprotID_Amigo', 'Organism_Amigo', sep = ';', file = out)
+        print('OtherDB_ID_Amigo', 'Gene/ProductName_Amigo', 'Synonym_Amigo', 'Organism_Amigo', sep = ';', file = out2)
+        for line in tbu:
+            if not 'Synonyms' in line:
+                if 'UniProtKB' in line:
+                    line=line.rstrip()
+                    line=line.split(';')
+                    otherID = line[0]
+                    geneprod = line[1]
+                    pre_uniprot = line[2].split(':')[1]
+                    uniprot = pre_uniprot.split('|')[0]
+                    organism = line[3]
+                    print(otherID,geneprod,uniprot,organism, sep = ';', file = out)
+                else:
+                    line=line.rstrip()
+                    line=line.split(';')
+                    otherID = line[0]
+                    geneprod = line[1]
+                    synonym = line[2]
+                    organism = line[3]
+                    print(otherID,geneprod,synonym,organism, sep = ';', file = out2)        
 #------------------------------
 
 #Parsing The Autophagy Database
@@ -722,6 +775,7 @@ with open('TheAutophagyDB', 'r') as tbu, open('symbol_TADB', 'w') as sym, open('
         print(element,file = ID)
 
 #paste -d ';' symbol_TADB synonym_TADB name_TADB ID_TADB > TheAutophagyDatabase
+#cat headers TheAutophagyDatabase > TBU_TheAutophagy_DB
 
 # remove 'nan' uniprot IDs
 count = 0
