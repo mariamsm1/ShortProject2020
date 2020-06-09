@@ -42,5 +42,5 @@ Run codes written for merging the databases from each category in order to colle
 Runs codes written for finding the overlap between the end files of autophagy-cell death, autophagy-lysosome , cell death-lysosome as well as autophagy-lysosome-cell death.
 
 
-* screenCheck.py
+* screenCheck.py<br>
 Runs codes written to parse a whole genome screen of knockdown data of all known human genes. The script will split the screen file to control and sample files. These belong to genes that showed at least 20% reduction in cell count upon the knockdown in replicate1 and/or replicate2.
