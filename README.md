@@ -3,7 +3,7 @@
 
 My short project entitled "Functional annotation of potential regulators of lysosomes and cell death identified in a genome-wide screen " involved scripts that carry out two major tasks.The first task primarly involves data download and analysis of genes collected from 12 databases related to autophagy,cell death,and lysosomes. However, the second task involves functional annotation of genes obtained from a genome-wide screen and microscopic images analysis of knockdown data. 
 Scripts of the above tasks require the installation and import of various packages(see packages.py) and Matplotlib library(v3.1.1). <br>
-Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, mergeAutophagy.py,mergeCellDeath.py, mergeLysosome.py,overlap.py.
+Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, mergeAutophagy.py,mergeCellDeath.py, mergeLysosome.py,overlap.py,screenCheck.py.
 Versions and release dates of databases were recorded if they were available, otherwise the date of data collection was written instead.
 <br>
 Input files used to generate output are saved in Input_Files folder.
@@ -39,4 +39,8 @@ Run codes written for merging the databases from each category in order to colle
 
 
 * overlap.py<br>
-Runs codes written for finding the overlap between the end files of autophagy-cell death, autophagy-lysosome , cell death-lysosome.
+Runs codes written for finding the overlap between the end files of autophagy-cell death, autophagy-lysosome , cell death-lysosome as well as autophagy-lysosome-cell death.
+
+
+* screenCheck.py
+Runs codes written to parse a whole genome screen of knockdown data of all known human genes. The script will split the screen file to control and sample files. These belong to genes that showed at least 20% reduction in cell count upon the knockdown in replicate1 and/or replicate2.
