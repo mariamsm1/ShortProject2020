@@ -101,7 +101,6 @@ with open('Final_Clean_CellDeath_Data') as cd, open('Final_Clean_Lysosome_Data')
         org = line[4]
         auto_dict[uniprot]['organism'] = org
     for key in auto_dict:
-        if key in lys_dict and key in cd_dict: #126 genes in common
+        if key in lys_dict and key in cd_dict:
             print(key,auto_dict[key]['symbol'],auto_dict[key]['synonym'],auto_dict[key]['protname'], auto_dict[key]['organism'], sep = '\t', file = out)
  #------------------------------
-    
