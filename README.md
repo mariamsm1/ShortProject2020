@@ -44,5 +44,4 @@ Runs codes written to parse a whole genome screen of knockdown data of all known
 
 ## Other Information
 * Versions and release dates of databases were recorded if they were available, otherwise the date of data collection was written instead.
-<br>
 * All unreviewed, obsolete, and unmapped-data files that were obtained upon mapping our data to uniprot are found in "Incomplete_Mappings" folder. The final,reviewed-data files are saved to "Final_Databases" folder.
