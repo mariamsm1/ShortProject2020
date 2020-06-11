@@ -6,7 +6,7 @@ Scripts of the above tasks require the installation and import of various packag
 Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, mergeAutophagy.py,mergeCellDeath.py, mergeLysosome.py,overlap.py,screenCheck.py.
 Versions and release dates of databases were recorded if they were available, otherwise the date of data collection was written instead.
 <br>
-All unreviewed, obsolete, and unmapped-data files that were obtained upon mapping the data to uniprot are found in "Incomplete_Mappings" folder. The final,reviewed-data files are saved to "Final_Databases" folder.
+All unreviewed, obsolete, and unmapped-data files that were obtained upon mapping our data to uniprot are found in "Incomplete_Mappings" folder. The final,reviewed-data files are saved to "Final_Databases" folder.
 
 ## Dependencies
 
