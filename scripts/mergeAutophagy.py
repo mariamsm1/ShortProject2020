@@ -405,7 +405,6 @@ with open('reviewedEntrez_mappedAuto') as ent,open('Full_reviewed_mappedENS') as
 #paste -d ';' prefinal_ENS synonyms_ENS > Ensembl_rev_separated
 #cat Ensembl_rev_separated prefinal_ENT > ENSENT_FullReviewedAUTO_nan 
 
-
 #Overlap4_amigoSynOver and ENSEMBL/ENTREZ merged entries
 dict_over = {}
 dict_rev= {}
@@ -604,32 +603,113 @@ with open('over_amigoODB', 'r') as over, open('Overlap6_ODBOver', 'w') as out2:
         all_names = '|'.join(str(x) for x in namelist)
         print(uniprot,all_symbols,all_synonyms,all_names,all_org, sep = ';', file = out2)       
     #------------------------------
-    
-#Reviewed entries were considered after mapping the uniprot IDs to uniprot. 
-#Fix structure.
 
-with open('Reviewed_Final_AutpphagyMappedData') as rev, open('Final_Clean_Autophagy_Data', 'w') as out:
-    print('Auto_Uniprot', 'Auto_Symbol', 'Auto_Synonym', 'Auto_ProteinName', 'Auto_Organism', sep = '\t', file = out)
+#Reviewed entries of the Uniprot/subcellular autophagosome
+
+dict_over = {}
+count = 0
+rev_dict = {}
+with open('Overlap6_ODBOvers') as over, open('Reviewed_autophagosome') as rev, open('overphago', 'w') as out:
+    for line in over:
+        line= line.rstrip()
+        line = line.split('\t')
+        uniprot = line[0]
+        dict_over[uniprot] = {}
+        symbol = line[1]
+        dict_over[uniprot]['symbol'] = symbol
+        synonym = line[2]
+        dict_over[uniprot]['synonym'] = synonym
+        protname = line[3]
+        dict_over[uniprot]['protname'] = protname
+        org = line[4]
+        dict_over[uniprot]['org'] = org
     for line in rev:
-        if not 'your' in line:
+        if not 'Entry' in line:
             line = line.rstrip()
-            line=line.split('\t')
-            uniprot = line[0]
-            gsyn = line[5]
+            line = line.split('\t')
+            uniprot = line[0] 
+            rev_dict[uniprot] = {}
+            gsyn = line[4]
             symbol = gsyn.split(' ')[0]
             if symbol == '':
                 symbol = 'nan'
             else:
                 symbol = symbol
+            rev_dict[uniprot]['symbol'] = symbol
             synonym = gsyn.split(' ')[1:]
             synonym = ','.join(synonym)
             if synonym == '':
                 synonym = 'nan'
             else:
                 synonym = synonym
-            protname = line[4]
+            rev_dict[uniprot]['synonym'] = synonym
+            protname = line[3]
             protname = protname.split('(EC ')[0]
             protname = protname.split('[Cleaved ')[0]
-            org = line[6]
-            print(uniprot,symbol,synonym,protname,org, sep = '\t', file = out)
+            rev_dict[uniprot]['protname'] = protname
+            org = line[5]
+            rev_dict[uniprot]['org'] = org          
+    for key in dict_over:
+        if key in rev_dict:
+            print(key,dict_over[key]['symbol']+','+rev_dict[key]['symbol'], dict_over[key]['synonym']+','+rev_dict[key]['synonym'], dict_over[key]['protname']+'|'+rev_dict[key]['protname'], dict_over[key]['org']+','+rev_dict[key]['org'], sep = '\t', file = out)
+        else:
+            print(key,dict_over[key]['symbol'],dict_over[key]['synonym'],dict_over[key]['protname'],dict_over[key]['org'], sep = '\t', file = out)
+            
+    for key in rev_dict:
+        if not key in dict_over:
+            print(key,rev_dict[key]['symbol'],rev_dict[key]['synonym'],rev_dict[key]['protname'],rev_dict[key]['org'], sep = '\t', file = out)
+            
+with open('overphago', 'r') as over, open('Overlap7_phago', 'w') as out2:
+    for line in over:
+        line=line.rstrip().split('\t')
+        uniprot = line[0]
+        symbol=line[1]
+        symbol = symbol.splitlines()
+        alt = line[2]
+        alt = alt.splitlines()
+        org = line[4]
+        org = org.splitlines()
+        name = line[3]
+        name = name.splitlines()
+        for line in symbol:
+            line=line.rstrip()
+            symbollist = set(line.split(','))
+        for line in alt:
+            line=line.rstrip()
+            altlist = set(line.split(','))
+        for line in name:
+            line=line.rstrip()
+            namelist = set(line.split('|')) 
+        for line in org:
+            line = line.rstrip()
+            orglist = set(line.split(','))
+        all_symbols = ','.join(str(x) for x in symbollist)
+        all_alt = ','.join(str(x) for x in altlist)
+        all_names = '|'.join(str(x) for x in namelist)
+        all_org = ','.join(str(x) for x in orglist)
+        print(uniprot,all_symbols,all_alt,all_names,all_org, sep = '\t', file = out2)   
+#-------------------------------  
+               
+#Reviewed entries were considered after mapping the uniprot IDs to uniprot. 
+#Fix structure.
+
+with open('Reviewed_ALL_separated_Autophagy') as rev, open('Final_Clean_Autophagy_Data', 'w') as out:
+    print('Auto_Uniprot','Auto_Symbol','Auto_Synonym','Auto_ProteinName','Auto_Organism', sep = '\t', file = out)
+    for line in rev:
+        if not 'your' in line:
+            line = line.rstrip()
+            #since i was getting index error upon splitting of the '\t' to get symbols (some were empty) so do the following
+            line = line.split('\t')[0:8]
+            line = ["nan" if x == '' else x for x in line]
+            line = '\t'.join(line)
+            #split again because now the empty fields that were tabs are replaced by 'nan'
+            line = line.split('\t')
+            uniprot = line[1]
+            symbol = line[4]
+            synonym = line[5].replace(' ', ',')
+            protname = line[6]
+            protname = protname.split('(EC ')[0]
+            protname = protname.split('[Cleaved ')[0]
+            organism = line[7]
+            print(uniprot, symbol,synonym,protname,organism, sep = '\t', file = out)
 #---------------------------
