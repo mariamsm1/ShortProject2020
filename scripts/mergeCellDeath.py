@@ -641,5 +641,25 @@ with open('oversyn', 'r') as over, open('Overlap7_syn', 'w') as out2:
         all_org = ','.join(str(x) for x in orglist)
         print(uniprot,all_symbols,all_alt,all_names,all_org, sep = '\t', file = out2)    
         
-        #add headers and call it Final_Clean_CellDeath_Data
  #--------------------------                         
+
+#Map final file to uniprot 
+
+with open('Reviewed_ALL_separated_cellDeath') as rev, open('Final_Clean_cellDeath_Data', 'w') as out:
+    print('CD_Uniprot','CD_Symbol','CD_Synonym','CD_ProteinName','CD_Organism', sep = '\t', file = out)
+    for line in rev:
+        if not 'your' in line:
+            line = line.rstrip()
+            line = line.split('\t')[0:9]
+            line = ["nan" if x == '' else x for x in line]
+            line = '\t'.join(line)
+            line = line.split('\t')
+            uniprot = line[0]
+            symbol = line[5]
+            synonym = line[6].replace(' ', ',')
+            protname = line[7]
+            protname = protname.split('(EC ')[0]
+            protname = protname.split('[Cleaved ')[0]
+            organism = line[8]
+            print(uniprot, symbol,synonym,protname,organism, sep = '\t', file = out)   
+#----------------------------
