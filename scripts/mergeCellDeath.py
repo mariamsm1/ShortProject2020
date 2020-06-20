@@ -388,7 +388,7 @@ with open('overCas', 'r') as over, open('Overlap4_CAS', 'w') as out2:
 dict_over = {}
 count = 0
 rev_dict = {}
-with open('Overlap4_CAS') as over, open('Reviewed_New_cellDeath') as rev, open('overNewCD', 'w') as out:
+with open('Overlap4_CAS') as over, open('Reviewed_goa_CD') as rev, open('overNewCD', 'w') as out:
     for line in over:
         line= line.rstrip()
         line = line.split('\t')
