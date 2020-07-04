@@ -44,7 +44,7 @@ Runs codes written to parse a whole genome screen of knockdown data of all known
 * MappingToUniprot.py<br>
 Runs codes for the files whose entrez IDs were mapped to uniprot in order to get the accession numbers for genes in the original screen file.
 
-* MappingToLists.py
+* MappingToLists.py <br>
 Runs codes written for for matching the screen hits with the autophagy, cell death, and lysosome lists.
 
 ## Other Information
