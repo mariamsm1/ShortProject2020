@@ -693,6 +693,7 @@ with open('overphago', 'r') as over, open('Overlap7_phago', 'w') as out2:
 #Reviewed entries were considered after mapping the uniprot IDs to uniprot. 
 #Fix structure.
 
+auto_dict = {}
 with open('Reviewed_ALL_separated_Autophagy') as rev, open('Final_Clean_Autophagy_Data', 'w') as out:
     print('Auto_Uniprot','Auto_Symbol','Auto_Synonym','Auto_ProteinName','Auto_Organism', sep = '\t', file = out)
     for line in rev:
@@ -705,11 +706,19 @@ with open('Reviewed_ALL_separated_Autophagy') as rev, open('Final_Clean_Autophag
             #split again because now the empty fields that were tabs are replaced by 'nan'
             line = line.split('\t')
             uniprot = line[1]
-            symbol = line[4]
-            synonym = line[5].replace(' ', ',')
-            protname = line[6]
-            protname = protname.split('(EC ')[0]
-            protname = protname.split('[Cleaved ')[0]
-            organism = line[7]
-            print(uniprot, symbol,synonym,protname,organism, sep = '\t', file = out)
+            uniprot = uniprot.split(',')
+            for element in uniprot:
+                auto_dict[element] = {}
+                symbol = line[4]
+                auto_dict[element]['symbol'] = symbol
+                synonym = line[5].replace(' ', ',')
+                auto_dict[element]['synonym'] = synonym
+                protname = line[6]
+                protname = protname.split('(EC ')[0]
+                protname = protname.split('[Cleaved ')[0]
+                auto_dict[element]['protname'] = protname
+                organism = line[7]
+                auto_dict[element]['org'] = organism
+    for key in auto_dict:
+        print(key, auto_dict[key]['symbol'], auto_dict[key]['synonym'], auto_dict[key]['protname'], auto_dict[key]['org'], sep = '\t', file = out)
 #---------------------------
