@@ -645,21 +645,31 @@ with open('oversyn', 'r') as over, open('Overlap7_syn', 'w') as out2:
 
 #Map final file to uniprot 
 
-with open('Reviewed_ALL_separated_cellDeath') as rev, open('Final_Clean_cellDeath_Data', 'w') as out:
-    print('CD_Uniprot','CD_Symbol','CD_Synonym','CD_ProteinName','CD_Organism', sep = '\t', file = out)
+lys_dict = {}
+with open('Reviewed_ALL_separated_Lysosome') as rev, open('Final_Clean_Lysosome_Data', 'w') as out:
+    print('Lys_Uniprot','Lys_Symbol','Lys_Synonym','Lys_ProteinName','Lys_Organism', sep = '\t', file = out)
     for line in rev:
         if not 'your' in line:
             line = line.rstrip()
             line = line.split('\t')[0:9]
             line = ["nan" if x == '' else x for x in line]
             line = '\t'.join(line)
+            #split again because now the empty fields that were tabs are replaced by 'nan'
             line = line.split('\t')
             uniprot = line[0]
-            symbol = line[5]
-            synonym = line[6].replace(' ', ',')
-            protname = line[7]
-            protname = protname.split('(EC ')[0]
-            protname = protname.split('[Cleaved ')[0]
-            organism = line[8]
-            print(uniprot, symbol,synonym,protname,organism, sep = '\t', file = out)   
+            uniprot = uniprot.split(',')
+            for element in uniprot:
+                lys_dict[element] = {}
+                symbol = line[5]
+                lys_dict[element]['symbol'] = symbol
+                synonym = line[6].replace(' ', ',')
+                lys_dict[element]['synonym'] = synonym
+                protname = line[7]
+                protname = protname.split('(EC ')[0]
+                protname = protname.split('[Cleaved ')[0]
+                lys_dict[element]['protname'] = protname
+                organism = line[8]
+                lys_dict[element]['org'] = organism
+    for key in lys_dict:
+        print(key, lys_dict[key]['symbol'], lys_dict[key]['synonym'], lys_dict[key]['protname'], lys_dict[key]['org'], sep = '\t', file = out)
 #----------------------------
