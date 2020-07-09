@@ -480,9 +480,9 @@ with open('proteinAtlasLysosomeS.tsv') as lyso, open('proteinAtlasLysosomAl.tsv'
 #Parsing goa_uniprot_all.gaf
 
 #This code takes a long time to finish
-list_autophagy = ['autophagy', 'Autophagy', 'autophagosome', 'Autophagosome',"autophagocytosis",'Autophagocytosis']
-list_lysosomes = ['lysosome', 'Lysosome', 'Lysosomes', 'Lysosome', 'lysosomal', 'Lysosomal']
-list_cellDeath = ['cell death', 'Cell Death','apoptosis', 'Apoptosis', 'programmed', 'Programmed']
+list_autophagy = ['autophagy', 'Autophagy', 'autophagosome', 'Autophagosome',"autophagocytosis",'Autophagocytosis', 'autophagic', 'Autophagic']
+list_lysosomes = ['lysosome', 'Lysosome', 'Lysosomes', 'lysosomes', 'lysosomal', 'Lysosomal']
+list_cellDeath = ['cell death', 'Cell Death','Cell death' ,'apoptosis', 'Apoptosis','apoptotic' ,'Apoptotic', 'necrosis', 'Necrosis', 'necrotic', 'Necrotic', 'necroptosis', 'Necroptosis', 'necroptotic', 'Necroptotic']
 
 with open('goa_uniprot_all.gaf', 'r') as goa, open('autophagy_lines','w') as auto,open('lysosome_lines','w') as lys, open('cellD_lines','w') as cell:
     for line in goa:
