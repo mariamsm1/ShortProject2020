@@ -3,7 +3,7 @@
 
 My short project entitled "Functional annotation of potential regulators of lysosomes and cell death identified in a genome-wide screen " involved scripts that carry out two major tasks.The first task primarly involves data download and analysis of genes collected from 12 databases related to autophagy,cell death,and lysosomes. However, the second task involves functional annotation of genes obtained from a genome-wide screen and basic statistical analysis of knockdown data. 
 Scripts of the above tasks require the installation and import of various packages(see packages.py) and Matplotlib library(v3.1.1). <br>
-Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, mergeAutophagy.py,mergeCellDeath.py, mergeLysosome.py,overlap.py,screenCheck.py, MappingToUniprot.py, and MappingToLists.py.
+Some databases were available for download(see datadownload.py), while others were not and therefore the htmls were downloaded (datadownload.py) and webscraping scripts were written to parse them(see webscraping.py). Other scripts include parse.py, mergeAutophagy.py,mergeCellDeath.py, mergeLysosome.py,overlap.py,screenCheck.py, plotting.py,MappingToUniprot.py, and MappingToLists.py.
 
 ## Dependencies
 
@@ -40,6 +40,9 @@ Runs codes written for finding the overlap between the end files of autophagy-ce
 
 * screenCheck.py<br>
 Runs codes written to parse a whole genome screen of knockdown data of all known human genes. The script will split the screen file to control and sample files. These belong to genes that showed at least 15% reduction in cell count upon the knockdown in replicate1 and/or replicate2.
+
+* plotting.py<br>
+Runs codes that were used in matplotlib library to plot positive- and negative control-counts (as a part of the statistical evaluation of false positives and false negatives).
 
 * MappingToUniprot.py<br>
 Runs codes for the files whose entrez IDs were mapped to uniprot in order to get the accession numbers for genes in the original screen file.
