@@ -47,6 +47,9 @@ Runs codes for the files whose entrez IDs were mapped to uniprot in order to get
 * MappingToLists.py <br>
 Runs codes written for for matching the screen hits with the autophagy, cell death, and lysosome lists.
 
+## Usage
+All codes were written in Jupyter notebook (v6.0.1). The name or the path of the file should be supplied and the codes can be simply run with ctrl+enter OR alt+enter.
+
 ## Other Information
 * Versions and release dates of databases were recorded if they were available, otherwise the date of data collection was written.
 * All unreviewed, obsolete, and unmapped-data files that were obtained upon mapping our data to UniProt are found in "Incomplete_Mappings" folders. The final and reviewed-data files are saved to "Final_Databases" folder.
