@@ -42,7 +42,7 @@ Runs codes written for finding the overlap between the end files of autophagy-ce
 Runs codes written to parse a whole genome screen of knockdown data of all known human genes. The script will split the screen file to control and sample files. These belong to genes that showed at least 15% reduction in cell count upon the knockdown in replicate1 and/or replicate2.
 
 * plotting.py<br>
-Runs codes that were used in matplotlib library to plot positive- and negative control-counts (as a part of the statistical evaluation of false positives and false negatives).
+Runs codes that were used in matplotlib library to plot positive- and negative control-counts (as a part of the statistical evaluation of false positives and false negatives) as well as the codes written to get the counts that are used in generating the plots.
 
 * MappingToUniprot.py<br>
 Runs codes for the files whose entrez IDs were mapped to uniprot in order to get the accession numbers for genes in the original screen file.
