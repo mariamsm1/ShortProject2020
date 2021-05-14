@@ -80,7 +80,9 @@ wget.download(url, 'BCL2DBOtherBH3')
 url = 'https://www.proteinatlas.org/search/Lysosome?format=xml'
 wget.download(url, 'proteinAtlasLysosome.xml')
 
-
+#Download The The Human Protein Atlas database (tsv)/lysosome (P.S. this file wasn't used, the above xml was used for the 'lysosome' search instead)
+url = 'https://www.proteinatlas.org/search/lysosome?format=tsv'
+wget.download(url, 'proteinAtlasLysosome.tsv')
 
 #Download The The Human Protein Atlas database (tsv)/lysosomes
 url = 'https://www.proteinatlas.org/search/lysosomes?format=tsv'
