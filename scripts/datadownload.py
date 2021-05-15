@@ -100,11 +100,6 @@ url = 'https://www.proteinatlas.org/search/vesicle?format=tsv'
 wget.download(url, 'proteinAtlasLysosomeVesicle.tsv')
 
 
-#Downloading The Human Lysosome Gene Database(v.1.2)
-url = 'http://lysosome.unipg.it/index.php#results'
-wget.download(url, 'unipgLysosomesList')
-
-
 #Downloading casbah database(data collected 2020-04-10)
 url = 'http://bioinf.gen.tcd.ie/cgi-bin/casbah/casbah.pl'
 wget.download(url, 'casbah.pl')
