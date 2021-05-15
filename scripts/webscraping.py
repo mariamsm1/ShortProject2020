@@ -439,7 +439,9 @@ with open ('CASBAH_table16'+ ".csv", 'w') as out:
     for tup in tuples:
         tup = tup[:-1]
         print(','.join(tup), file = out)    #cat all 
-        
+##These tables were concatenated to a file called CASBAH_Fulltable.csv
+
+
 #Parsing CASBAH:
 
 #Print each organism's name at the end of its line. 
