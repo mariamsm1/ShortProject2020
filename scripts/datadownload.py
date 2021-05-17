@@ -108,7 +108,8 @@ wget.download(url, 'casbah.pl')
 #Downloading Hela Spatial Proteome(data collected 2020-04-13)
 url = 'http://mapofthecell.biochem.mpg.de/HeLa_Subcell_Localization_Summary.xlsx'
 wget.download(url, 'Hela_Subcell_localization.xlsx')
-
+#P.S. more data were downloaded from "https://www.cell.com/cell-reports/fulltext/S2211-1247(17)31188-9?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2211124717311889%3Fshowall%3Dtrue".
+#These were in Table S1 from the supplemental material.
 
 #Start by downloading Amigo Autophagy GO:0006914(release 2020-04)
 url = 'http://golr-aux.geneontology.io/solr/select?defType=edismax&qt=standard&indent=on&wt=csv&rows=100000&start=0&fl=bioentity,bioentity_label,synonym,taxon_label,annotation_class_list,source&facet=true&facet.mincount=1&facet.sort=count&json.nl=arrarr&facet.limit=25&hl=true&hl.simple.pre=%3Cem%20class=%22hilite%22%3E&hl.snippets=1000&csv.encapsulator=&csv.separator=%09&csv.header=false&csv.mv.separator=%7C&fq=document_category:%22bioentity%22&facet.field=source&facet.field=taxon_subset_closure_label&facet.field=type&facet.field=panther_family_label&facet.field=annotation_class_list_label&facet.field=regulates_closure_label&q=GO:0006914&qf=bioentity%5E2&qf=bioentity_label_searchable%5E2&qf=bioentity_name_searchable%5E1&qf=bioentity_internal_id%5E1&qf=synonym_searchable%5E1&qf=isa_partof_closure_label_searchable%5E1&qf=regulates_closure%5E1&qf=regulates_closure_label_searchable%5E1&qf=panther_family_searchable%5E1&qf=panther_family_label_searchable%5E1&qf=taxon_label_searchable%5E1'
