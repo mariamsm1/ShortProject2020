@@ -76,6 +76,7 @@ with open('TBU_protein_basic', 'r') as TBU, open('TBU_proteinbasicHAMdb_clean', 
 #----------------------------------
 
 #Parsing Hela Spatial Proteome(HSP)
+#2 excel files were downloaded where each of them had several sheets, I copied the content of each sheet to another excel file and saved them in .csv format.
 
 #LFQdeep
 gnames_list = []
